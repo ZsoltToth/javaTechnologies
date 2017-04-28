@@ -12,6 +12,10 @@ public class Car {
 	private int numberOfDoors;
 	private int horsePower;
 
+	public Car() {
+		super();
+	}
+
 	public Car(String plateNo, Producer producer, String color, int numberOfDoors, int horsePower) {
 		super();
 		this.plateNo = plateNo;
