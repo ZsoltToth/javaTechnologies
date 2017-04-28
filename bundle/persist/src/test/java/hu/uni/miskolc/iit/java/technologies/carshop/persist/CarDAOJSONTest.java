@@ -14,7 +14,7 @@ public class CarDAOJSONTest {
 	
 	@Before
 	public void setUp(){
-		dao = new carDAOJSON("resources/cars.json");
+		dao = new CarDAOJSON("resources/cars.json");
 	}
 
 	@Test

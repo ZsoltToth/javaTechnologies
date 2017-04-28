@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -14,13 +17,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.uni.miskolc.iit.java.technologies.carshop.api.model.Car;
 import hu.uni.miskolc.iit.java.technologies.carshop.service.dao.CarDAO;
 
-public class carDAOJSON implements CarDAO {
+public class CarDAOJSON implements CarDAO {
 
+	private Logger LOGGER = LogManager.getLogger(CarDAOJSON.class);
+	
 	private File database;
 	
-	public carDAOJSON(String databasePath) {
+	public CarDAOJSON(String databasePath) {
 		this.database = new File(databasePath);
-		System.out.println(database.getAbsolutePath());
+		LOGGER.debug(String.format("Car Databse : %s", database.getAbsolutePath()));
 	}
 
 	public void createCar(Car car) {
@@ -37,9 +42,9 @@ public class carDAOJSON implements CarDAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.fatal(String.format("IOException occured due to %s", e.getMessage()));
 		}
+		LOGGER.info(String.format("Car (%s) has been added!", car.getPlateNo()));
 		
 
 	}
@@ -55,9 +60,9 @@ public class carDAOJSON implements CarDAO {
 		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.fatal(String.format("IOException occured due to %s", e.getMessage()));
 		}
 		Collection<Car> result = new ArrayList<Car>(Arrays.asList(cars));
 		return result;
