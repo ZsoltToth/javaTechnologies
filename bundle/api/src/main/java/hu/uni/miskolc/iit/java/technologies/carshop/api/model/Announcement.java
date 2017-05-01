@@ -8,7 +8,11 @@ public class Announcement {
 	private Price price;
 	private Date startDate;
 	private Date expirationDate;
-	private boolean isSold;
+	private boolean sold;
+
+	public Announcement() {
+		super();
+	}
 
 	public Announcement(Car car, Price price, Date startDate, Date expirationDate, boolean isSold) {
 		super();
@@ -16,7 +20,7 @@ public class Announcement {
 		this.price = price;
 		this.startDate = startDate;
 		this.expirationDate = expirationDate;
-		this.isSold = isSold;
+		this.sold = isSold;
 	}
 
 	public Car getCar() {
@@ -52,14 +56,21 @@ public class Announcement {
 	}
 
 	public boolean isSold() {
-		return isSold;
+		return sold;
 	}
 
 	public void setSold(boolean isSold) {
-		this.isSold = isSold;
+		this.sold = isSold;
 	}
 
-	public boolean isOpenAnnouncement(){
-		return !isSold && expirationDate.after(new Date());
+	public boolean openAnnouncement() {
+		return !sold && expirationDate.after(new Date());
 	}
+
+	@Override
+	public String toString() {
+		return "Announcement [car=" + car + ", price=" + price + ", startDate=" + startDate + ", expirationDate="
+				+ expirationDate + ", sold=" + sold + "]";
+	}
+
 }

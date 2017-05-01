@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hu.uni.miskolc.iit.java.technologies.carshop.api.model.Car;
 import hu.uni.miskolc.iit.java.technologies.carshop.service.dao.CarDAO;
+import hu.uni.miskolc.iit.java.technologies.carshop.service.dao.exceptions.CarNotFoundException;
 
 public class CarDAOJSON implements CarDAO {
 
@@ -66,6 +67,15 @@ public class CarDAOJSON implements CarDAO {
 		}
 		Collection<Car> result = new ArrayList<Car>(Arrays.asList(cars));
 		return result;
+	}
+
+	public Car readCarByPlateNo(String plateNo) throws CarNotFoundException {
+		for(Car car : readCars()){
+			if(plateNo.equals(car.getPlateNo())){
+				return car;
+			}
+		}
+		throw new CarNotFoundException(String.format("There is no car with plate number: %s", plateNo));
 	}
 
 }

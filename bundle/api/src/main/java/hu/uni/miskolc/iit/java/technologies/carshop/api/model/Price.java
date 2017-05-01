@@ -7,6 +7,10 @@ public class Price {
 	private double amount;
 	private Currency currency;
 
+	public Price() {
+		super();
+	}
+
 	public Price(double amount, Currency currency) {
 		super();
 		this.amount = amount;
@@ -19,6 +23,11 @@ public class Price {
 
 	public Currency getCurrency() {
 		return currency;
+	}
+
+	@Override
+	public String toString() {
+		return "Price [amount=" + amount + ", currency=" + currency + "]";
 	}
 
 }

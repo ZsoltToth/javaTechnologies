@@ -12,5 +12,5 @@ public interface AnnouncementManagementService {
 	Collection<Announcement> listAnnouncements();
 	Collection<Announcement> listOpenAnnouncements();
 	
-	void announce(Car car, Date expire, Price price);
+	void announce(String carPlateNo, Date expire, Price price);
 }
