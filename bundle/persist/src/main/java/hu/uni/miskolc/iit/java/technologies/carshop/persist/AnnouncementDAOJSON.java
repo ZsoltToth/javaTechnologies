@@ -34,6 +34,7 @@ public class AnnouncementDAOJSON implements AnnouncementDAO {
 	public void createAnnouncement(Announcement announcement) {
 		Collection<Announcement> announcements = new ArrayList<Announcement>(readAnnouncements());
 		announcements.add(announcement);
+//		System.out.println(announcements);
 		Announcement[] announcementsArray = announcements.toArray(new Announcement[announcements.size()]);
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.addMixIn(Announcement.class, AnnouncementMixIn.class);
