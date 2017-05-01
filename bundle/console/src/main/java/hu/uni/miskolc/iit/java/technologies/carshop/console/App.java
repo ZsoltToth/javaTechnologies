@@ -3,11 +3,19 @@ package hu.uni.miskolc.iit.java.technologies.carshop.console;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 
+import hu.uni.miskolc.iit.java.technologies.carshop.api.model.Announcement;
 import hu.uni.miskolc.iit.java.technologies.carshop.api.model.Car;
+import hu.uni.miskolc.iit.java.technologies.carshop.api.model.Price;
 import hu.uni.miskolc.iit.java.technologies.carshop.api.model.Car.Producer;
+import hu.uni.miskolc.iit.java.technologies.carshop.api.service.AnnouncementManagementService;
 import hu.uni.miskolc.iit.java.technologies.carshop.api.service.CarManagementService;
+import hu.uni.miskolc.iit.java.technologies.carshop.persist.AnnouncementDAOJSON;
 import hu.uni.miskolc.iit.java.technologies.carshop.persist.CarDAOJSON;
+import hu.uni.miskolc.iit.java.technologies.carshop.service.dao.AnnouncementDAO;
+import hu.uni.miskolc.iit.java.technologies.carshop.service.dao.CarDAO;
+import hu.uni.miskolc.iit.java.technologies.carshop.service.impl.AnnouncementManagementServiceImpl;
 import hu.uni.miskolc.iit.java.technologies.carshop.service.impl.CarManagementServiceImpl;
 
 /**
@@ -17,9 +25,13 @@ import hu.uni.miskolc.iit.java.technologies.carshop.service.impl.CarManagementSe
 public class App 
 {
 	private static CarManagementService carManager;
+	private static AnnouncementManagementService announcementManager;
 	
 	static {
-		carManager = new CarManagementServiceImpl(new CarDAOJSON("resources/cars.json"));
+		CarDAO carDAO = new CarDAOJSON("resources/cars.json");
+		AnnouncementDAO announcementDAO = new AnnouncementDAOJSON("resources/announcements.json");
+		carManager = new CarManagementServiceImpl(carDAO);
+		announcementManager = new AnnouncementManagementServiceImpl(announcementDAO, carDAO);
 	}
 	
     public static void main( String[] args ) throws IOException
@@ -37,29 +49,33 @@ public class App
     		if("insert car".equals(line)){
     			addCar();
     		}
+    		if("list announcements".equals(line)){
+    			printAnnouncements(announcementManager.listAnnouncements());
+    		}
+    		if("list open announcements".equals(line)){
+    			printAnnouncements(announcementManager.listOpenAnnouncements());
+    		}
     	}
         
         
     }
     
     private static void listCars(){
-    	for(int i = 0; i < 30; i++){
-    		System.out.print("-");
-    	}
-    	System.out.println();
+    	final int tableWidth = 30;
+    	printHorisontalLine(tableWidth);
     	System.out.println("| PlateNo | Producer | Color | # Doors | Horse Power |");
-    	for(int i = 0; i < 30; i++){
-    		System.out.print("-");
-    	}
-    	System.out.println();
+    	printHorisontalLine(tableWidth);
     	for(Car car : carManager.listCars()){
     		System.out.println(String.format("| %1$7s | %2$8s | %3$5s | %4$7d | %5$11d |", car.getPlateNo(), car.getProducer(),car.getColor(), car.getNumberOfDoors(), car.getHorsePower()));
-//        	System.out.println(car.getPlateNo());
-        	for(int i = 0; i < 30; i++){
-        		System.out.print("-");
-        	}
-        	System.out.println();
+    		printHorisontalLine(tableWidth);
         }
+    }
+    
+    private static void printHorisontalLine(int length){
+    	for(int i = 0; i < length; i++){
+    		System.out.print("-");
+    	}
+    	System.out.println();
     }
     
     private static void addCar() throws IOException{
@@ -76,6 +92,21 @@ public class App
     	int horsePower = Integer.parseInt(br.readLine());
     	Car car = new Car(plateNo, producer, color, doors, horsePower);
     	carManager.acquireCar(car);
+    	
+    }
+    
+    private static void printAnnouncements(Collection<Announcement> announcements){
+    	final int tableWidth = 80;
+    	printHorisontalLine(tableWidth);
+    	System.out.println("| 						Car							 | 	Price			 | Start Date | Expire Date | open  |");
+    	System.out.println("| PlateNo | Producer | Color | # Doors | Horse Power | Amount | Currency |			  |		        |       |");
+    	printHorisontalLine(tableWidth);
+    	for(Announcement announcement : announcements){
+    		Car car = announcement.getCar();
+    		Price price = announcement.getPrice();
+    		System.out.println(String.format("| %1$7s | %2$8s | %3$5s | %4$7d | %5$11d | %6$5.2f | %7$8s | %8$10s | %9$5s | %10$5s |", car.getPlateNo(), car.getProducer(),car.getColor(), car.getNumberOfDoors(), car.getHorsePower(), price.getAmount(), price.getCurrency().toString(), announcement.getStartDate().toString(), announcement.getExpirationDate().toString(), announcement.openAnnouncement() ));
+    	}
+//    	[{"car":{"plateNo":"abc123","producer":"BMW","color":"green","numberOfDoors":3,"horsePower":200},"price":{"amount":100.0,"currency":"HUF"},"startDate":1493615656917,"expirationDate":1493702056917,"sold":false},{"car":{"plateNo":"abc123","producer":"BMW","color":"green","numberOfDoors":3,"horsePower":200},"price":{"amount":100.0,"currency":"HUF"},"startDate":1493615694693,"expirationDate":1493702094693,"sold":false},{"car":{"plateNo":"abc123","producer":"BMW","color":"green","numberOfDoors":3,"horsePower":200},"price":{"amount":100.0,"currency":"HUF"},"startDate":1493615791762,"expirationDate":1493702191762,"sold":false},{"car":{"plateNo":"abc123","producer":"BMW","color":"green","numberOfDoors":3,"horsePower":200},"price":{"amount":100.0,"currency":"HUF"},"startDate":1493616069905,"expirationDate":1493702469905,"sold":false},{"car":{"plateNo":"abc123","producer":"BMW","color":"green","numberOfDoors":3,"horsePower":200},"price":{"amount":100.0,"currency":"HUF"},"startDate":1493616091702,"expirationDate":1493702491702,"sold":false}]
     	
     }
     
