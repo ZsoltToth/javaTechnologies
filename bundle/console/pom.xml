@@ -34,13 +34,13 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-
+<!-- 
 	<plugins>
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-remote-resources-plugin</artifactId>
 			<executions>
-				<!-- <execution> <goals> <goal>bundle</goal> </goals> </execution> -->
+				 <execution> <goals> <goal>bundle</goal> </goals> </execution> 
 			</executions>
 			<configuration>
 				<includes>
@@ -49,4 +49,5 @@
 			</configuration>
 		</plugin>
 	</plugins>
+	 -->
 </project>
